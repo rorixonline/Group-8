@@ -1,0 +1,62 @@
+/*
+PIR Motion Sensor - Parallax SSS-28027
+Arduino UNO
+Detects motion and triggers LED + Serial output
+*/
+
+int pirPin = 2; // Signal pin connected to D2
+int ledPin = 13; // Built-in LED on UNO
+int motionState = 0; // Current motion state
+int lastMotionState = 0; // Previous state
+
+void setup() {
+pinMode(pirPin, INPUT);
+pinMode(ledPin, OUTPUT);
+Serial.begin(9600);
+Serial.println("PIR Motion Sensor Ready!");
+Serial.println("Waiting for motion...");
+}
+
+void loop() {
+motionState = digitalRead(pirPin); // Read sensor (HIGH = motion)
+
+// Check if motion detected
+if (motionState == HIGH) {
+digitalWrite(ledPin, HIGH); // Turn LED ON
+if (lastMotionState == LOW) {
+Serial.println("🚨 MOTION DETECTED!");
+lastMotionState = HIGH;
+}
+} else {
+digitalWrite(ledPin, LOW); // Turn LED OFF
+if (lastMotionState == HIGH) {
+Serial.println("✅ Motion stopped / No motion");
+lastMotionState = LOW;
+}
+}
+
+delay(50); // Small delay for stability
+}
+
+
+
+.......
+
+int greenLed=2;
+int delayTime = 1000;
+
+
+void setup() {
+  pinMode(greenLed,OUTPUT);
+}
+
+void loop() {
+  digitalWrite(greenLed,HIGH);
+  delay(delayTime);
+
+  digitalWrite(greenLed,LOW);
+  delay(delayTime);
+}
+
+......
+

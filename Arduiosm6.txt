@@ -1,0 +1,26 @@
+int pirPin = 2; // PIR sensor output pin
+int buzzerPin = 8; // Buzzer pin
+int pirState = LOW; // Current PIR state
+
+void setup() {
+pinMode(pirPin, INPUT);
+pinMode(buzzerPin, OUTPUT);
+Serial.begin(9600);
+}
+
+void loop() {
+pirState = digitalRead(pirPin);
+
+if (pirState == HIGH) {
+// Sound the buzzer
+tone(buzzerPin, 1000); // 1000 Hz tone
+Serial.println("Motion detected! Buzzer ON");
+delay(500); // Sound for 1/2 second
+noTone(buzzerPin); // Turn off
+delay(200); // Short pause before checking again
+} else {
+noTone(buzzerPin); // Ensure buzzer is off
+}
+
+delay(100);
+}

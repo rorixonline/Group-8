@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sensor Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .container {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px;
+    }
+    .box {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      width: 30%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .box h2 {
+      margin-top: 0;
+      color: #003366;
+    }
+    .alert {
+      background-color: #ff3333;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .status-normal {
+      color: green;
+      font-weight: bold;
+    }
+    .status-alert {
+      color: red;
+      font-weight: bold;
+    }
+    footer {
+      background-color: #eaeaea;
+      padding: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sensor Dashboard</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Settings</a>
+      <a href="#">Logs</a>
+    </nav>
+  </header>
+
+  <h2 style="text-align:center;">Hardware Sensor Monitoring</h2>
+  <p style="text-align:center;color:gray;">Real-time alerts from your hardware devices</p>
+
+  <div class="container">
+    <div class="box" id="statusBox">
+      <h2>Sensor Status</h2>
+      <p>Tamper Sensor: <span id="tamperStatus" class="status-normal">Normal</span></p>
+      <p>Temperature: <span id="tempValue">24°C</span></p>
+    </div>
+
+    <div class="box" id="alertBox">
+      <h2>Live Alerts</h2>
+      <div id="alertMessage">No alerts yet...</div>
+    </div>
+
+    <div class="box" id="activityBox">
+      <h2>Recent Activity</h2>
+      <ul id="activityLog">
+        <li>System Check Complete</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    Connection: <span id="connectionStatus" class="status-normal">Online</span> |
+    Last Update: <span id="lastUpdate">--:--:--</span> |
+    Server Status: <span class="status-normal">Running</span>
+  </footer>
+
+  <script>
+    const ws = new WebSocket('ws://localhost:3000');
+    const alertMessage = document.getElementById('alertMessage');
+    const tamperStatus = document.getElementById('tamperStatus');
+    const activityLog = document.getElementById('activityLog');
+    const lastUpdate = document.getElementById('lastUpdate');
+
+    ws.onopen = () => {
+      console.log('Connected to server');
+    };
+
+    ws.onmessage = (event) => {
+      const msg = event.data;
+      const time = new Date().toLocaleTimeString();
+      lastUpdate.textContent = time;
+
+      // Update alert box
+      alertMessage.innerHTML = `<div class="alert">${msg}</div>`;
+      tamperStatus.textContent = msg.includes('Tamper') ? 'Alert!' : 'Normal';
+      tamperStatus.className = msg.includes('Tamper') ? 'status-alert' : 'status-normal';
+
+      // Add to activity log
+      const li = document.createElement('li');
+      li.textContent = `${time} - ${msg}`;
+      activityLog.prepend(li);
+    };
+  </script>
+</body>
+</html>

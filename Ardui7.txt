@@ -1,0 +1,25 @@
+const int pirPin = 2; // PIR signal pin
+const int buzzerPin = 3; // Buzzer signal pin
+
+void setup() {
+pinMode(pirPin, INPUT);
+pinMode(buzzerPin, OUTPUT);
+Serial.begin(9600);
+
+// Wait 30 seconds for the PIR sensor to calibrate
+Serial.println("Calibrating sensor...");
+delay(30000);
+Serial.println("System Ready");
+}
+
+void loop() {
+int pirState = digitalRead(pirPin); // Read the PIR sensor
+
+if (pirState == HIGH) {
+Serial.println("Motion detected!");
+digitalWrite(buzzerPin, HIGH); // Turn on the buzzer
+delay(500); // Sound the buzzer for 0.5 seconds
+} else {
+digitalWrite(buzzerPin, LOW); // Turn off the buzzer
+}
+}
