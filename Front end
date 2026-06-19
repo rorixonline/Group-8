@@ -1,1 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sensor Monitoring</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f4; }
+    #alerts { padding: 20px; background: #fff; border: 1px solid #ccc; }
+    .alert { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Hardware Sensor Dashboard</h1>
+  <div id="alerts">No alerts yet...</div>
 
+  <script>
+    const ws = new WebSocket('ws://localhost:3000');
+    ws.onmessage = (event) => {
+      document.getElementById('alerts').innerHTML =
+        `<div class="alert">${event.data}</div>`;
+    };
+  </script>
+</body>
+</html>
